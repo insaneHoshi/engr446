@@ -33,6 +33,9 @@ class MediaRecognitionBot:
 	def generateResponse(self):
 		None
 		
+	"""
+	Posts a reply to a particular comment.
+	"""
 	def postToComment(self,post,comment):
 		comment.reply(post)
 	
@@ -45,7 +48,7 @@ class MediaRecognitionBot:
 		self.isLogedIn = self.r.is_logged_in()
 		
 	def runBot(self):
-		self.r = praw.Reddit(user_agent='MediaRecocnitionBot 0.1 by u/insaneHoshi')
+		self.r = praw.Reddit(user_agent='MediaRecocnitionBot 0.2 by u/insaneHoshi')
 		print self.subsToPoll
 		
 		self.login()
@@ -60,7 +63,7 @@ class MediaRecognitionBot:
 				for comment in comments:
 					try:
 						print comment.body
-						
+						print comment.permalink
 					except:
 						None
 					
