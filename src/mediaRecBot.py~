@@ -1,6 +1,7 @@
 import praw
 import time
 import base64
+import calendar
 
 """
 Defines the mode that the bot will run in 
@@ -8,6 +9,14 @@ Defines the mode that the bot will run in
 1 - Release
 """
 mode = 0
+"""
+Defines how often the bot will scan reddits.
+0 - Only once
+1 - Run Periodically
+x - Run Periodically x number of times.
+
+"""
+period = 0
 
 def main():
 	bot = MediaRecognitionBot()
@@ -26,6 +35,10 @@ class MediaRecognitionBot:
 		self.r = None
 		#Is the bot loged on to its account
 		self.isLogedIn = False
+		
+		#Dictionary of which posts have been analized and the number of comments looked at.
+		self.postAnalized = { }
+		
 		
 	def gatherPosts(self):
 		None
@@ -53,20 +66,35 @@ class MediaRecognitionBot:
 		
 		self.login()
 		print self.isLogedIn
-		for sub in self.subsToPoll:
-			subreddit =self.r.get_subreddit(sub)
-			submissions = self.r.get_subreddit(sub).get_hot(limit = 1)
-			
-			for submission in submissions:
+		
+		timesRun = 0
+		while True:
+			for sub in self.subsToPoll:
+				subreddit =self.r.get_subreddit(sub)
+				submissions = self.r.get_subreddit(sub).get_hot(limit = 1)
 				
-				comments = praw.helpers.flatten_tree(submission.comments)
-				for comment in comments:
-					try:
-						print comment.body
-						print comment.permalink
-					except:
-						None
+				for submission in submissions:
 					
+					comments = praw.helpers.flatten_tree(submission.comments)
+					self.postAnalized[submission.short_link] = len(comments)
+					
+					
+					# If the post is more than an hour old or its comments are more than 2000 (ie this has probibly looked at it allready)
+					if submission.created_utc < (calendar.timegm(time.gmtime()) - 3600) or len(comments) <= 2000:
+						
+						for comment in comments:
+							try:
+								print comment.body
+								
+							except:
+								None
+			timesRun +=1
+			if period >= 1:
+				time.sleep(3600)
+				
+			if period == 0 or (period >1 and timesRun >period):
+				break
+				
 if __name__ == "__main__":
 	main();
 	

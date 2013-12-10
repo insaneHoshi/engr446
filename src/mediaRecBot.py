@@ -2,13 +2,14 @@ import praw
 import time
 import base64
 import calendar
+import NameRecognition as nR
 
 """
 Defines the mode that the bot will run in 
 0 - Debug
 1 - Release
 """
-mode = 0
+mode = 1
 """
 Defines how often the bot will scan reddits.
 0 - Only once
@@ -28,7 +29,7 @@ class MediaRecognitionBot:
 	def __init__(self):
 		self.subsToPoll = []
 		if mode == 1:
-			self.subsToPoll = ["programming"]
+			self.subsToPoll = ["programming","askreddit"]
 		if mode == 0:
 			self.subsToPoll = ["MediaRecognitionBot"]
 			
@@ -63,7 +64,7 @@ class MediaRecognitionBot:
 	def runBot(self):
 		self.r = praw.Reddit(user_agent='MediaRecocnitionBot 0.2 by u/insaneHoshi')
 		print self.subsToPoll
-		
+		mediaRecog = nR.mediaNameRecognition()
 		self.login()
 		print self.isLogedIn
 		
@@ -83,11 +84,16 @@ class MediaRecognitionBot:
 					if submission.created_utc < (calendar.timegm(time.gmtime()) - 3600) or len(comments) <= 2000:
 						
 						for comment in comments:
+							
 							try:
-								print comment.body
 								
-							except:
+								mediaRecog.runMediaRecognition(comment.body)
+								
+							except UnicodeEncodeError:
 								None
+							except AttributeError:
+								None
+							
 			timesRun +=1
 			if period >= 1:
 				time.sleep(3600)
