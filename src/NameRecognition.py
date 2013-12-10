@@ -26,11 +26,24 @@ class mediaNameRecognition:
 		
 		for subtree in tree.subtrees():
 			
+			
 			if subtree.node == "NP":
-				print subtree
-			if "Sandler" in sentence:
-				print sentence
-		
+				firstLeaf = subtree.leaves()[0]
+				firstString = firstLeaf[0]
+				
+				if firstString.endswith("."):
+					#check first leaf to see if a leaf of a
+					#subtree begins with a string with a period
+					#and the end.  This happens sometimes when a
+					#PN begins a sentence, the previouse tuple gets
+					#included as a PN
+					subtree.pop(0)
+				
+				if len(subtree)>1:
+					print subtree
+			"""if "Sandler" in sentence:
+				#print sentence
+				"""
 		"""sentences = nltk.sent_tokenize(post) [1]
 		sentences = [nltk.word_tokenize(sent) for sent in sentences] [2]
 		sentences = [nltk.pos_tag(sent) for sent in sentences]

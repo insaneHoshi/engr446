@@ -2,6 +2,7 @@ import praw
 import time
 import base64
 import calendar
+import unicodedata
 import NameRecognition as nR
 
 """
@@ -29,7 +30,7 @@ class MediaRecognitionBot:
 	def __init__(self):
 		self.subsToPoll = []
 		if mode == 1:
-			self.subsToPoll = ["programming","askreddit"]
+			self.subsToPoll = ["askreddit"]
 		if mode == 0:
 			self.subsToPoll = ["MediaRecognitionBot"]
 			
@@ -72,7 +73,7 @@ class MediaRecognitionBot:
 		while True:
 			for sub in self.subsToPoll:
 				subreddit =self.r.get_subreddit(sub)
-				submissions = self.r.get_subreddit(sub).get_hot(limit = 1)
+				submissions = self.r.get_subreddit(sub).get_hot(limit = 10)
 				
 				for submission in submissions:
 					
@@ -86,8 +87,7 @@ class MediaRecognitionBot:
 						for comment in comments:
 							
 							try:
-								
-								mediaRecog.runMediaRecognition(comment.body)
+								mediaRecog.runMediaRecognition(unicodedata.normalize('NFKD', comment.body).encode('ascii','ignore'))
 								
 							except UnicodeEncodeError:
 								None
