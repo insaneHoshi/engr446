@@ -4,3 +4,4 @@ Numpy
 NLTK
 PyYAML
 praw
+imdbpy
