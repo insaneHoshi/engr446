@@ -50,7 +50,11 @@ class MediaRecognitionBot:
 		
 	def gatherPosts(self):
 		None
-		
+	
+	"""
+	Creates a nicely formated response for the detected name and movie title 
+	containing comment.
+	"""
 	def generateResponse(self):
 		None
 		
@@ -68,6 +72,9 @@ class MediaRecognitionBot:
 		self.r.login("MediaRecognitionBot",base64.b64decode("TVJCRGFuaWVsNjk="))
 		self.isLogedIn = self.r.is_logged_in()
 	
+	"""
+	Runs the name and movie analysis
+	"""
 	def analyzeComments(self, comments):
 		for comment in comments:
 			#mediaRecog.runMediaRecognition("Lord of the Rings is a very good movie.")
@@ -75,17 +82,9 @@ class MediaRecognitionBot:
 			for name in names:
 				print name
 				self.movieRecog.runRecognition(name)
-			"""try:
-				names = self.mediaRecog.runMediaRecognition(unicodedata.normalize('NFKD', comment.body).encode('ascii','ignore'))
-				for name in names:
-					print name
-					self.movieRecog.runRecognition(name)
-					
-			except UnicodeEncodeError:
-				None
-			except AttributeError:
-				None
-			"""	
+			"""
+			ToDO: Complete analysis for other types of media
+			"""
 			
 	def runBot(self):
 		self.r = praw.Reddit(user_agent='MediaRecocnitionBot 0.3 by u/insaneHoshi')
@@ -110,6 +109,12 @@ class MediaRecognitionBot:
 						
 						self.analyzeComments(comments)
 					
+			"""
+			TODO: Take analysis results and formulate repy to reddit.
+
+			Also check if comment has allready been replied to.
+			"""
+
 			timesRun +=1
 			if period >= 1:
 				time.sleep(3600)

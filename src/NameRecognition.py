@@ -26,12 +26,11 @@ class mediaNameRecognition:
 	def namedEntityRecognition(self,sentence):
 		tokens = nltk.word_tokenize(sentence)
 		
-		tagged = nltk.pos_tag(tokens)
 		pos_tags = nltk.pos_tag(tokens)
 		#print nltk.ne_chunk(pos_tags, binary=True)
 		grammar = "NP: {<DT|PP\$>?<JJ>*<NNP>+}"
 		"""
-		NP: {<DT|PP\$>?<JJ>*<NN>}   # chunk determine  r/possessive, adjectives and nouns
+		NP: {<DT|PP\$>?<JJ>*<NN>}   # chunk determiner/possessive, adjectives and proper nouns
 		      {<NNP>+}                # chunk sequences of proper nouns
 		"""
 		
@@ -43,7 +42,7 @@ class mediaNameRecognition:
 		possibleDelimTitle = ""
 		delimCounter = 0
 		delimBool = False
-		#tree.draw()
+		tree.draw()
 		for subtree in tree:
 			if str(type (subtree)) == "<type 'tuple'>":
 				if delimBool ==True:

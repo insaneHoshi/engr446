@@ -34,6 +34,7 @@ class movieNameRecognition:
 		
 		try:
 			s_result = self.ia.search_movie(possibleTitle)
+			print s_result
 		except imdb.IMDbError:
 			print "Probably you're not connected to Internet."
 			
